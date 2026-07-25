@@ -18,15 +18,9 @@ class App {
   #mapEvent;
   constructor() {
     this._getPosition();
-    // Using the geolocation API
     form.addEventListener('submit', this._newWorkout.bind(this));
 
-    inputType.addEventListener('change', function () {
-      inputElevation
-        .closest('.form__row')
-        .classList.toggle('form__row--hidden');
-      inputCadence.closest('.form__row').classList.toggle('form__row--hidden');
-    });
+    inputType.addEventListener('change', this._toggleElevationField);
 
     // practicing project architecture
   }
@@ -46,23 +40,26 @@ class App {
 
     // Display a map using leaflet library :
     const cords = [latitude, longitude];
-    this.map = L.map('map').setView(cords, 13);
+    this.#map = L.map('map').setView(cords, 13);
 
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-    }).addTo(this.map);
+    }).addTo(this.#map);
 
     // handling clicks on map
-    this.#map.on('click', this_showForm.bind(this));
+    this.#map.on('click', this._showForm.bind(this));
   }
 
   _showForm(mapE) {
-    this.mapEvent = mapE;
+    this.#mapEvent = mapE;
     form.classList.remove('hidden');
     inputDistance.focus();
   }
-  _toggleElevationField() {}
+  _toggleElevationField() {
+    inputElevation.closest('.form__row').classList.toggle('form__row--hidden');
+    inputCadence.closest('.form__row').classList.toggle('form__row--hidden');
+  }
   _newWorkout(e) {
     e.preventDefault();
     // clear input fields
@@ -73,7 +70,7 @@ class App {
         '';
 
     // Display marker;
-    const { lat, lng } = mapEvent.latlng;
+    const { lat, lng } = this.#mapEvent.latlng;
     L.marker([lat, lng])
       .addTo(this.#map)
       .bindPopup(
