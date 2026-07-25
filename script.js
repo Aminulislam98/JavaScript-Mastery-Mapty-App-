@@ -30,7 +30,18 @@ navigator.geolocation.getCurrentPosition(
     L.marker(cords)
       .addTo(map)
       .bindPopup('A pretty CSS popup.<br> Easily customizable.')
-      .openPopup();
+      .openPopup({
+        maxWidth: 250,
+        minWidth: 100,
+        autoClose: false,
+        closeOnClick: false,
+      });
+
+    map.on('click', function (mapEvent) {
+      console.log(mapEvent);
+      const { lat, lng } = mapEvent.latlng;
+      L.marker([lat, lng]).addTo(map).bindPopup('Workout').openPopup();
+    });
   },
   function () {
     alert('Could not get your location.');
