@@ -124,3 +124,5 @@ class App {
 }
 
 const app = new App();
+
+// finished the project
